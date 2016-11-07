@@ -1,38 +1,26 @@
-####link to fasta files
-```
 ln -s ../../archive/*.fasta ./
 ```
 ---
 ####create gsnap indicies
 ```
+module load bowtie2
 for f in `ls *.assembly.fasta`
 do
-	/lustre/projects/staton/software/gmap-2016-09-14/bin/gmap_build \
-	--dir=/lustre/projects/staton/projects/oak_radtag_genomics/analysis/02_gsnap/ \
-	--db=$f.genome \
+	bowtie2-build \
+	$f \
 	$f &
 done
 ```
 ---
-####run gsnap
+####run bt2
 ```
+module load bowtie2
 for f in `ls *.assembly.fasta`
 do
-#echo "#$ -N a$f
-#$ -cwd
-#$ -e ogs.err
-#$ -o ogs.out
-/lustre/projects/staton/software/gmap-2016-09-14/bin/gsnap \
---dir=/lustre/projects/staton/projects/oak_radtag_genomics/analysis/02_gsnap/ \
---db=$f.genome \
---max-mismatches=20 \
--output-file=$f.sam \
--t 30 \
--A sam \
-./rads.gailing.fasta > $f.gsnap.out.txt
-#" > job.ogs
-#qsub job.ogs
-#rm -f job.ogs
+bowtie2 \
+-p 30 \
+-x $f \
+-f rads.gailing.fasta > $f.bt2.out.txt
 done
 ```
 ---

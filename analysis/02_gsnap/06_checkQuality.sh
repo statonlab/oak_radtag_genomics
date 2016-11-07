@@ -4,7 +4,6 @@ module load samtools
 for f in `ls *assembly.fasta`
 do
 	echo $f.bam
-	echo "total"
 	samtools view -q 20 $f.bam | grep -v "^@" | wc -l
 	samtools view -q 20 $f.bam | grep -v "^@" | cut -f 1 | sort | uniq > $f.LISTtmp
-done
+done | paste - -
